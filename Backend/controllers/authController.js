@@ -12,20 +12,34 @@ const generateToken = (userId) => {
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, profileImageUrl } = req.body
 
-        // Check if the email already exits or not
-        const userExits = await User.findOne({ email });
+        const { name, email, password } = req.body;
+
+        // Cloudinary uploaded image URL
+        const profileImageUrl = req.file
+            ? req.file.path
+            : "";
+
+        // Check if user already exists
+        const userExits = await User.findOne({
+            email,
+        });
+
         if (userExits) {
-            return res.status(400).json({ message: "User already exits" })
-
+            return res.status(400).json({
+                message: "User already exists",
+            });
         }
 
-        // Encrypt the password
+        // Encrypt password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt)
 
-        // Create a new user
+        const hashedPassword = await bcrypt.hash(
+            password,
+            salt
+        );
+
+        // Create user
         const user = await User.create({
             name,
             email,
@@ -33,16 +47,22 @@ const registerUser = async (req, res) => {
             profileImageUrl,
         });
 
-        // Return the user data with JWT
+        // Return user data with JWT
         res.status(201).json({
             _id: user._id,
             name: user.name,
             email: user.email,
-            profileImageUrl: user.profileImageUrl,
-            token: generateToken(user._id)
-        })
+            profileImageUrl:
+                user.profileImageUrl,
+            token: generateToken(user._id),
+        });
+
     } catch (error) {
-        return res.status(500).json({ message: "Server Error", error: error.message })
+
+        return res.status(500).json({
+            message: "Server Error",
+            error: error.message,
+        });
     }
 };
 
