@@ -1,13 +1,11 @@
 const multer = require("multer");
-
-const CloudinaryStorage =
-  require("multer-storage-cloudinary").CloudinaryStorage;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const cloudinary = require("../config/cloudinary");
 
 // Cloudinary storage
 const storage = new CloudinaryStorage({
-  cloudinary,
+  cloudinary: cloudinary,
   params: {
     folder: "resume-builder",
     allowed_formats: ["jpg", "jpeg", "png"],
