@@ -10,7 +10,6 @@ A modern full-stack Resume Builder web application built using the MERN Stack. U
 ## Frontend
 https://resume-builder-xi-one-39.vercel.app
 
-
 ---
 
 # ✨ Features
